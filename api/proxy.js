@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const sessionCookie = 'sessionid=r39oo7t53bcizqmolb5g5mw3mx00vtpi';
   const speciesSet = new Set();
-  let url = `https://waarneming.nl/api/v1/observations/?observer_id=${user_id}&species_group=1&date_after=${date_after}&date_before=${date_before}&limit=100`;
+ let url = `https://waarneming.nl/api/v1/observations/?user_id=${user_id}&species_group=1&date_after=${date_after}&date_before=${date_before}&limit=100`;
   let pages = 0;
 
   try {
