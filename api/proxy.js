@@ -13,32 +13,5 @@ module.exports = async function handler(req, res) {
   });
 
   const html = await response.text();
-
-  const speciesIds = (html.match(/\/species\/\d+/g) || []);
-  const uniqueSpecies = new Set(speciesIds).size;
-
-  const rarityLabel = { 4: 'Zeer zeldzaam', 3: 'Zeldzaam', 2: 'Vrij algemeen', 1: 'Algemeen' };
-  const rarityColor = { 4: '#e53935', 3: '#f9a825', 2: '#1e88e5', 1: '#43a047' };
-  const rarityMap = { 'rare-4': 4, 'rare-3': 3, 'rare-2': 2, 'rare-1': 1 };
-
-  const species = [];
-  const rowRegex = /<tr>([\s\S]*?)<\/tr>/g;
-  let match;
-  while ((match = rowRegex.exec(html)) !== null) {
-    const row = match[1];
-    const nameMatch = row.match(/class="species-common-name"[^>]*>([\s\S]*?)<\/a>/);
-    const rarityMatch = row.match(/fa-triangle (rare-\d)/);
-    if (nameMatch && rarityMatch) {
-      const name = nameMatch[1].replace(/<[^>]+>/g, '').trim();
-      const rarityLevel = rarityMap[rarityMatch[1]] || 0;
-      if (name && rarityLevel >= 2) {
-        species.push({ name, rarity: rarityLevel, label: rarityLabel[rarityLevel], color: rarityColor[rarityLevel] });
-      }
-    }
-  }
-
-  species.sort((a, b) => b.rarity - a.rarity);
-  const top3 = species.slice(0, 3);
-
-  return res.status(200).json({ species_count: uniqueSpecies, rare_species: top3 });
+  return res.status(200).send(html.substring(0, 2000));
 }
