@@ -7,15 +7,14 @@ module.exports = async function handler(req, res) {
 
   const response = await fetch(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-      'Accept-Language': 'nl-NL,nl;q=0.9',
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Referer': 'https://waarneming.nl/',
-      'Cookie': 'sessionid=r39oo7t53bcizqmolb5g5mw3mx00vtpi',
+      'User-Agent': 'Mozilla/5.0',
+      'Accept': 'text/html',
     }
   });
 
   const html = await response.text();
-  return res.status(200).send(html.substring(0, 3000));
+  const speciesRows = (html.match(/\/species\/\d+/g) || []);
+  const uniqueSpecies = new Set(speciesRows).size;
+
+  return res.status(200).json({ species_count: uniqueSpecies });
 }
