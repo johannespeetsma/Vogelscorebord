@@ -9,6 +9,7 @@ module.exports = async function handler(req, res) {
     headers: {
       'User-Agent': 'Mozilla/5.0',
       'Accept': 'text/html',
+      'Cookie': 'sessionid=r39oo7t53bcizqmolb5g5mw3mx00vtpi',
     }
   });
 
