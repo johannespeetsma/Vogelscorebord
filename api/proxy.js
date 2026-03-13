@@ -16,14 +16,22 @@ module.exports = async function handler(req, res) {
 
   const html = await response.text();
 
-  // Tel het aantal tabelrijen met soorten
+  // Tel tabelrijen maar trek navigatie-rijen eraf
   const tableRows = (html.match(/<tr>/g) || []).length;
-  const speciesHrefs = (html.match(/href="\/species\/\d+\/"/g) || []);
-  const uniqueSpecies = new Set(speciesHrefs).size;
   
+  // Zoek de tabel met soorten - rijen met species links
+  const speciesRows = (html.match(/\/species\/\d+/g) || []);
+  const uniqueSpecies = new Set(speciesRows).size;
+
+  // Zoek ook naar het getal direct in de paginatitel of header
+  const titleMatch = html.match(/(\d+)\s*soort(?:en)?\s*gezien/i) ||
+                     html.match(/Totaal[^\d]*(\d+)/i) ||
+                     html.match(/<h[1-4][^>]*>.*?(\d+).*?<\/h[1-4]>/i);
+
   return res.status(200).json({ 
-    table_rows: tableRows,
+    species_count: uniqueSpecies || tableRows,
     unique_species: uniqueSpecies,
-    html_sample: html.substring(15000, 18000)
+    table_rows: tableRows,
+    title_match: titleMatch ? titleMatch[1] : null
   });
 }
