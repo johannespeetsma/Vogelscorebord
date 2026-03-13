@@ -15,14 +15,8 @@ module.exports = async function handler(req, res) {
   });
 
   const html = await response.text();
-
-  const tableRows = (html.match(/<tr>/g) || []).length;
   const speciesRows = (html.match(/\/species\/\d+/g) || []);
   const uniqueSpecies = new Set(speciesRows).size;
 
-  return res.status(200).json({ 
-    species_count: tableRows,
-    unique_species: uniqueSpecies,
-    table_rows: tableRows,
-  });
+  return res.status(200).json({ species_count: uniqueSpecies });
 }
