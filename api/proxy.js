@@ -15,15 +15,15 @@ module.exports = async function handler(req, res) {
   });
 
   const html = await response.text();
-  
-  const matches = [...html.matchAll(/(\d+)\s*soort/gi)];
-  const counts = matches.map(m => parseInt(m[1]));
-  const speciesLinks = (html.match(/\/species\/\d+\//g) || []);
-  const uniqueSpecies = new Set(speciesLinks).size;
 
+  // Tel het aantal tabelrijen met soorten
+  const tableRows = (html.match(/<tr>/g) || []).length;
+  const speciesHrefs = (html.match(/href="\/species\/\d+\/"/g) || []);
+  const uniqueSpecies = new Set(speciesHrefs).size;
+  
   return res.status(200).json({ 
-    counts_found: counts,
-    species_links: uniqueSpecies,
-    html_around_soort: (html.match(/.{50}soort.{50}/gi) || []).slice(0, 5)
+    table_rows: tableRows,
+    unique_species: uniqueSpecies,
+    html_sample: html.substring(15000, 18000)
   });
 }
