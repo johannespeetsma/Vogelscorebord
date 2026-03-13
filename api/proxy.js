@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     // Debug: stuur een stukje HTML terug
     return res.status(200).json({ 
       error: 'Kon aantal niet vinden', 
-    html_preview: html.substring(5000, 9000)
+    html_preview: html.substring(9000, 13000)
     });
 
   } catch (e) {
