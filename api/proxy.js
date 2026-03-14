@@ -1,7 +1,6 @@
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  const { user_id, year = '2026' } = req.query;
-  if (!user_id) return res.status(400).json({ error: 'Geen user_id' });
+  const { user_id = '360639', year = '2026' } = req.query;
 
   const url = `https://waarneming.nl/users/${user_id}/species/?period=life&species_group_id=1&filter_year=${year}`;
 
@@ -12,9 +11,7 @@ module.exports = async function handler(req, res) {
     }
   });
 
+  const status = response.status;
   const html = await response.text();
-  const speciesRows = (html.match(/\/species\/\d+/g) || []);
-  const uniqueSpecies = new Set(speciesRows).size;
-
-  return res.status(200).json({ species_count: uniqueSpecies });
+  return res.status(200).json({ status, preview: html.substring(0, 500) });
 }
